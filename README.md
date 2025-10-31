@@ -1,11 +1,12 @@
 # MAESTROM — 宇宙探索者
 
 > 一个基于 Three.js + Vue 3 构建的沉浸式 3D 宇宙主题交互网站
-## Page 预览
+## Page 展示
+### 静态预览
 ![Page 预览](./TD/page.png)
-
+### 动态展示
 ![Page 动图](./TD/view.gif)
-**[在线演示][demo]** | **[报告问题][issues]** | **[功能建议][issues]**
+**[在线演示](https://isgalaxias.vercel.app/)** | **[报告问题](https://github.com/hexianWeb/isgalaxias/issues)** | **[功能建议](https://github.com/hexianWeb/isgalaxias/issues)**|**[调控面板](https://isgalaxias.vercel.app/#debug)**
 
 ---
 
