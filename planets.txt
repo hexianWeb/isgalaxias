@@ -1,0 +1,240 @@
+# 行星🪐科技概念官网！Hero Section 回归！（Three.js）
+
+## 0.好久不见
+
+新老观众老爷们！我鸽子王何贤又双叒叕回归了！真的是好久不见！记得上一次发文章还是在[上一次](https://juejin.cn/post/7538715423534399534)。稍不留神就已经和大家两个月没见了。这期间，我凭借之前的 9 篇文章，达到了平台创作等级 `LV.5`（会不会是掘金最速传说啊？）。真心感谢大家一直以来的支持！
+
+不知不觉，今年都快结束了。从最初的“周更博主”，到“月更博主”，再到如今的“半年更博主”，每次有人催更时，我还是会感到有点不好意思。
+
+不行！不能再鸽了！！！  
+重新自我介绍一下——我是一名在 `Three.js` 领域里摸爬滚打的**初级玩家**。在这里，我会分享自己的所见、所闻与所想。
+
+---
+
+## 1.前置条件
+
+欢迎阅读本篇文章！在深入探讨 `Three.js` 与 `Shader (GLSL)` 的进阶内容之前，请确保您已经具备以下基础知识：
+
+1. **Three.js 基础**  
+   您需要熟悉 `Three.js` 的基本概念与使用方法，包括场景（`Scene`）、相机（`Camera`）、渲染器（`Renderer`）、几何体（`Geometry`）、材质（`Material`）和网格（`Mesh`）等核心组件。  
+   如果您对这些内容还不熟悉，建议先学习 `Three.js` 的入门教程。我比较推荐外网知名博主 [Bruno Simon](https://bruno-simon.com/) 的课程 `threejs-journey`（B 站上有免费版，但如果条件允许，建议支持正版课程）。  
+   当然，如果您希望我分享自己的学习路径，可以在评论区留言。人数够多的话，我会着手撰写一篇系统的学习路线文章。
+
+2. **Shader 语法**  
+   本文将涉及 `GLSL`（OpenGL Shading Language）的编写，因此您需要了解 `GLSL` 的基本语法，包括顶点着色器（Vertex Shader）与片元着色器（Fragment Shader）的结构，以及如何在 `Three.js` 中使用自定义着色器。
+
+---
+
+## 2.Hero Section 概览
+
+> “Hero Section” 是网页设计中的一个术语，通常指页面顶部的大型横幅区域。  
+> 对于开发者而言，它可以更直观地理解为：**用户在访问网站瞬间所感受到的视觉冲击，或促使他们停留在网站的关键视觉因素。**
+
+相信大家偶尔也会刷到一些以星球为主题的官网，看起来既梦幻又酷炫。  
+
+<img src="C:\Users\f1686533\Desktop\planets\planets.png" style="zoom:150%;" />
+
+这些网站往往拥有天马行空的页面布局，美丽的星球在画面中静静流动，营造出一种未来科技与宇宙幻想交织的氛围。  
+于是，我让 `GPT` 通过文生图生成了一张页面原型图。
+
+### Page 原型图
+
+![01](C:\Users\f1686533\Desktop\planets\hero.png)
+
+并尝试将其复原，于是得到了以下结果
+
+### Page  静态预览
+
+![](C:\Users\f1686533\Desktop\planets\page.png)
+
+### Page 动图 
+
+**由于平台图片体积限制, 动画画质存在大幅抽帧和压缩，还请各位可以在 PC 端自行体验**
+
+![](C:\Users\f1686533\Desktop\planets\view.gif)
+
+[PC端在线预览地址(需要魔法)](https://isgalaxias.vercel.app/): https://isgalaxias.vercel.app/
+
+[DeBug 在线调试界面](https://isgalaxias.vercel.app/#debug): https://isgalaxias.vercel.app/#debug
+
+[Github 仓库地址](https://github.com/hexianWeb/isgalaxias): https://github.com/hexianWeb/isgalaxias
+
+### 转发贴环节
+
+> 老掘友熟悉的环节了，那么让我来介绍本次项目转发者为 Threejs Journey 课程作者 **Bruno Simon**
+
+![](C:\Users\f1686533\Desktop\planets\x.png)
+
+## 3.场景搭建
+
+由于本专栏主要聚焦于 `Three.js`，因此本文不会详细讲解从 0 到 1 的完整页面实现过程，而是重点介绍与 `Three.js` 相关的实现部分。
+
+首先，让我们分析一下当前场景（`Scene`）中的主要元素：
+- 最外层的 **星云图背景**
+- 散布在空间中的 **星点** 与 **中心星环**
+- 漂浮在太空中的 **三颗行星**
+
+### 3.1 星云图背景
+
+这一部分的实现非常简单：只需将加载好的星云贴图设置为场景的 `background` 即可。
+
+在此也顺便推荐一个优秀的 3D 贴图资源站 —— [Solar System Scope](https://www.solarsystemscope.com/textures/)。  
+本项目中使用的所有行星与星云贴图，均来自该网站。
+这里找到星云图
+
+![](C:\Users\f1686533\Desktop\planets\03.png)
+
+但注意这是一个根据 [CC Attribution 4.0](https://creativecommons.org/licenses/by/4.0/) 许可证提供各种行星纹理的网站，因此需要提供相应的版权信息。如果您将网站上线，请务必在页面上的某个位置显示这些版权信息。
+
+随后，在 `Three.js` 中加载贴图，并将其赋值为场景背景。  
+同时可以通过 `backgroundIntensity` 调整背景亮度，使整体层次更柔和。
+
+```js
+    this.scene.background = this.resources.items.spaceTexture
+    this.scene.backgroundIntensity = 0.25
+```
+
+![04](C:\Users\f1686533\Desktop\planets\04.png)
+
+### 3.2 星星 与 星环
+
+这一部分构成了整个 Hero Section 的核心视觉焦点。我们通过 `Points` 系统创建了一个由大量粒子组成的螺旋星系，其中包含星星和中心星环。
+
+![](C:\Users\f1686533\Desktop\planets\01.gif)
+
+乍一看，当前的实现方式似乎可以分为两个部分，“中心的`粒子圆环`和外层的`粒子群`”，以及周围缓慢旋转的粒子群对吗？但是仔细看“中心的`粒子圆环`和外层的`粒子群`”，似乎并没有那么强的割裂感，反而更像是粒子圆环带动了整个粒子群一同旋转，对吧？这是怎么做到的？
+
+其实这只是一个非常巧妙的视觉错觉，有点像小时候玩的万花筒。如下图
+
+![02](C:\Users\f1686533\Desktop\planets\02.gif)
+
+当我们放开控制器、稍微调整视角时，就会发现这个结构实际上只是一个简单的圆柱体。  
+通过透视投影，我们营造出了“遍布星光的宇宙”错觉。
+
+于是，现在你大概已经能想到几种实现方式了：
+
+- 在一个圆柱体表面使用 `MeshSurfaceSampler` 对几何体平面进行采样，以确定粒子位置；  
+- 或者在构建 `BufferGeometry` 时，利用三角函数约束顶点分布，使所有粒子落在圆环轨迹上。
+- 下面我来分享我在项目中采用的具体思路。
+
+#### 实现思路
+
+可以概括为以下几个步骤：
+
+1. **生成螺旋分布的粒子位置**：基于极坐标系统，沿着多个分支（branches）生成螺旋分布的粒子
+2. **应用圆环约束**：使用数学函数将粒子约束在环形区域内，形成星环效果
+3. **添加随机扰动**：为每个粒子添加随机偏移，营造自然的星系形态
+4. **着色器动画**：在顶点着色器中实现旋转动画，让星系"流动"起来
+
+#### 粒子位置生成
+
+在 `setGalaxy()` 方法中，我们为每个粒子生成位置数据：
+
+```js
+// 生成在环形区域内的半径
+const minRadius = this.parameters.innerRadius * this.parameters.radius
+const maxRadius = this.parameters.radius
+const radius = minRadius + Math.random() * (maxRadius - minRadius)
+
+// 计算螺旋角度和分支角度
+const spinAngle = radius * this.parameters.spin
+const branchAngle = (i % this.parameters.branches) / this.parameters.branches * Math.PI * 2
+
+// 生成基础位置
+const x = Math.cos(branchAngle + spinAngle) * radius
+const z = Math.sin(branchAngle + spinAngle) * radius
+```
+
+这里的关键是：
+- `spinAngle`：根据半径和旋转参数 `spin` 计算螺旋角度，离中心越远，旋转角度越大
+- `branchAngle`：将粒子均匀分配到多个分支上，形成星系的旋臂结构
+
+#### 圆环约束算法
+
+为了让粒子呈现出星环的效果，我们使用了**圆环约束算法**：
+
+```js
+// 计算距离圆环中心的归一化距离（0-1）
+const ringCenter = (minRadius + maxRadius) * 0.5
+const ringWidth = maxRadius - minRadius
+const distanceToRingCenter = Math.abs(radius - ringCenter) / (ringWidth * 0.5)
+
+// 使用帽形函数（反向抛物线）来约束随机扰动
+const ringConstraint = (1.0 - distanceToRingCenter ** this.parameters.ringFalloff) * this.parameters.constraintStrength
+const effectiveRandomness = this.parameters.randomness * ringConstraint
+```
+
+这个算法的核心思想是：
+- 距离圆环中心越近的粒子，随机扰动越大（约束强度高）
+- 距离边缘越近的粒子，随机扰动越小（约束强度低）
+- 通过 `ringFalloff` 参数控制衰减曲线，`constraintStrength` 控制整体约束强度
+
+这样就能形成一条清晰的星环带，而不是均匀分布的粒子。
+
+#### 随机扰动
+
+为了增加星系的自然感，我们为每个粒子的Y轴添加了随机偏移：
+
+```js
+const randomY = effectiveRandomness * radius * (Math.random() < 0.5 ? 1 : -0.4) * Math.random() ** this.parameters.randomnessPower * 20
+```
+
+这里可以看到我对于扰动约束存在两种细分情况 `Math.random() < 0.5 ? 1 : -0.4`
+
+可以理解为粒子 Y轴正向偏移时随机偏移效果为 100%，负向偏移时随机效果只有 40%
+
+当然也可以把这个效果去掉，当前效果会变为下图:
+
+![](C:\Users\f1686533\Desktop\planets\03.gif)
+
+或许你有更大胆的创意？在中心部分放上一些特殊的星空元素？比如[黑洞](https://www.shadertoy.com/results?query=black+hole)，或者一只巨大的“外星之眼” 👁️让整个场景更具神秘感。
+
+#### 粒子圆环带动粒子群
+
+到目前为止，我们已经定义了粒子在空间中的分布关系，也确定了它们在星环结构中的约束逻辑。接下来要做的，就是让这些粒子 **动起来** —— 让星环旋转，从而带动整个星系流动。
+
+##### 动画实现思路
+
+在这里我们通过 **顶点着色器（vertex shader）** 来实现粒子的动态旋转。相比在 JavaScript 层更新所有粒子坐标，使用 GPU 端的位移计算可以大幅降低性能消耗，并让动画更流畅。
+
+核心逻辑是基于 **粒子到中心的距离衰减旋转速度**：
+
+- 离中心越近 → 旋转越快
+- 离中心越远 → 旋转越慢
+
+这样能让整个星环在旋转时呈现一种“内圈快、外圈慢”的自然涡旋感。
+
+##### 顶点着色器动画逻辑
+
+```glsl
+float angle = atan(modelPosition.x, modelPosition.z);
+float distanceToCenter = length(modelPosition.y);
+float offset = (1.0 / distanceToCenter) * uTime * 0.2;
+angle += offset;
+
+// 更新位置
+modelPosition.x = cos(angle);
+modelPosition.z = sin(angle);
+```
+
+**计算到中心的距离**：
+ `distanceToCenter = length(modelPosition.y);` 用于控制旋转的衰减速率。
+
+如果旋转速度变化过大，可以通过以下方式做平滑限制：
+
+```glsl
+distanceToCenter = clamp(distanceToCenter, 0.0, 10.0);
+```
+
+让距离过近或过远的粒子保持在合理的旋转速率范围内。
+
+最终呈现出的效果，就是一个不断旋转、充满空间层次感的 **银河涡旋**：
+
+![](C:\Users\f1686533\Desktop\planets\04.gif)
+
+### 3.3. 星球
+
+
+
+
+

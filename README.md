@@ -430,6 +430,18 @@ emitter.on('ui:toggle-menu', (data) => {
 - [Vite](https://vitejs.dev/) - 下一代前端构建工具
 - [Tweakpane](https://tweakpane.github.io/) - 优秀的参数调试工具
 
+### 纹理资源版权
+
+本项目使用了 Solar System Scope 网站提供的行星纹理资源。这些纹理基于 **Creative Commons Attribution 4.0 International (CC BY 4.0)** 许可证发布。
+
+- **来源**：Solar System Scope (https://www.solarsystemscope.com/textures/)
+- **许可证**：https://creativecommons.org/licenses/by/4.0/
+- **署名要求**：如果您使用或分发本项目中的这些纹理，请保留此署名信息，并注明 "行星纹理由 Solar System Scope 提供，许可证：CC BY 4.0"。
+- **具体使用**：项目中引用的纹理包括银河和行星表面贴图（如 2k_stars_milky_way.jpg、ceres_fictional.jpg 等），用于 3D 行星系统渲染。未对原纹理进行修改。
+- **原作者**：Solar System Scope 团队
+
+更多详情请参考许可证条款。
+
 ---
 
 ## 📮 联系方式

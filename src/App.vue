@@ -33,7 +33,7 @@ onMounted(() => {
     <TechCursor />
 
     <!-- three.js 渲染的 canvas -->
-    <canvas ref="threeCanvas" class="three-canvas relative inset-0 " style="pointer-events: auto; z-index: -1;" />
+    <canvas ref="threeCanvas" class="three-canvas relative inset-0 " style="pointer-events: auto; z-index: 0;" />
 
     <!-- Indigo Cosmos Background with Top Glow -->
     <div
@@ -143,6 +143,13 @@ onMounted(() => {
       <!-- 主呼吸灯 -->
       <div class="breathing-light" />
     </div>
+
+    <!-- 纹理版权脚注 -->
+    <footer class="texture-credit">
+      <p class="credit-text">
+        行星纹理由 <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener noreferrer" class="credit-link">Solar System Scope</a> 提供，基于 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" class="credit-link">CC BY 4.0</a> 许可证。
+      </p>
+    </footer>
   </div>
 </template>
 
@@ -1365,6 +1372,83 @@ onMounted(() => {
   .ambient-glow {
     width: 250px;
     height: 25px;
+  }
+}
+
+/* 纹理版权脚注样式 */
+.texture-credit {
+  position: absolute;
+  bottom: 1%;
+  right: 2rem;
+  z-index: 15;
+  pointer-events: auto;
+  max-width: 300px;
+}
+
+.credit-text {
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.75rem;
+  color: rgba(240, 217, 247, 0.7);
+  text-align: right;
+  line-height: 1.3;
+  text-shadow: 0 0 5px rgba(168, 85, 247, 0.3);
+  background: rgba(20, 20, 30, 0.6);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  backdrop-filter: blur(10px);
+  animation: creditBreathe 3s ease-in-out infinite;
+}
+
+.credit-link {
+  color: rgba(168, 85, 247, 0.9);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(168, 85, 247, 0.4);
+  transition: all 0.3s ease;
+}
+
+.credit-link:hover {
+  color: #e9adfa;
+  text-shadow: 0 0 5px rgba(168, 85, 247, 0.6);
+  border-bottom-color: rgba(168, 85, 247, 0.6);
+}
+
+@keyframes creditBreathe {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
+/* 响应式设计 - 纹理版权 */
+@media (max-width: 768px) {
+  .texture-credit {
+    right: 1rem;
+    bottom: 0.5%;
+    left: 1rem;
+    max-width: none;
+  }
+
+  .credit-text {
+    font-size: 0.65rem;
+    text-align: center;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .texture-credit {
+    right: 0.5rem;
+    left: 0.5rem;
+  }
+
+  .credit-text {
+    font-size: 0.6rem;
+    padding: 0.3rem 0.5rem;
   }
 }
 </style>
