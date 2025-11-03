@@ -33,7 +33,7 @@ onMounted(() => {
     <TechCursor />
 
     <!-- three.js 渲染的 canvas -->
-    <canvas ref="threeCanvas" class="three-canvas relative inset-0 " style="pointer-events: auto; z-index: 0;" />
+    <canvas ref="threeCanvas" class="three-canvas relative inset-0 " style="pointer-events: auto; z-index: -1;" />
 
     <!-- Indigo Cosmos Background with Top Glow -->
     <div

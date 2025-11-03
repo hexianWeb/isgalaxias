@@ -73,19 +73,25 @@ export default class Planet {
 
   init() {
     // 创建星球几何体（增加细分以支持置换）
-    this.geometry = new THREE.SphereGeometry(this.radius, 128, 64)
+    this.geometry = new THREE.IcosahedronGeometry(this.radius, 64, 64)
 
     // 设置主纹理 & 各项异性过滤
     const texture = this.resources.items[this.textureName]
+    texture.generateMipmaps = true
+    texture.minFilter = THREE.LinearMipMapLinearFilter
     texture.colorSpace = THREE.SRGBColorSpace
     texture.anisotropy = 8
 
     // 设置法线贴图 & 各项异性过滤
     const normalMap = this.resources.items.planetNormal
+    normalMap.generateMipmaps = true
+    normalMap.minFilter = THREE.LinearMipMapLinearFilter
     normalMap.anisotropy = 8
 
     // 设置置换贴图 & 各项异性过滤
     const displacementMap = this.resources.items.planetDisplacement
+    displacementMap.generateMipmaps = true
+    displacementMap.minFilter = THREE.LinearMipMapLinearFilter
     displacementMap.anisotropy = 8
     // 创建着色器材质，模拟光照
     this.material = new THREE.ShaderMaterial({
