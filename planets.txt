@@ -1,17 +1,24 @@
-# 行星🪐科技概念官网！Hero Section 回归！（Three.js）
+# 🪐 行星科技概念官网！Hero Section 回归！（Three.js ✨）
 
-## 0.好久不见
+## 0.好久不见 👋
 
-新老观众老爷们！我鸽子王何贤又双叒叕回归了！真的是好久不见！记得上一次发文章还是在[上一次](https://juejin.cn/post/7538715423534399534)。稍不留神就已经和大家两个月没见了。这期间，我凭借之前的 9 篇文章，达到了平台创作等级 `LV.5`（会不会是掘金最速传说啊？）。真心感谢大家一直以来的支持！
+新老观众老爷们！我鸽子王何贤又双叒叕回归啦！😆  
 
-不知不觉，今年都快结束了。从最初的“周更博主”，到“月更博主”，再到如今的“半年更博主”，每次有人催更时，我还是会感到有点不好意思。
+真的是好久不见！记得上一次发文章还是在[上一次](https://juejin.cn/post/7538715423534399534)。一转眼就两个月没更新了。  
 
-不行！不能再鸽了！！！  
+这期间，我凭借之前的 9 篇文章成功晋级到创作等级 `LV.5` 🎉（会不会是掘金史上最快传说？）获得了`1K+`的粉丝。  
+
+衷心感谢大家一直以来的支持 ❤️。
+
+不知不觉，今年都快结束了。从最初的「周更博主」到「月更博主」，再到如今的「半年更博主」😂，每次被催更都觉得有点心虚。  
+
+不行！这次绝不能再鸽了！🕊️
+
 重新自我介绍一下——我是一名在 `Three.js` 领域里摸爬滚打的**初级玩家**。在这里，我会分享自己的所见、所闻与所想。
 
 ---
 
-## 1.前置条件
+## 1.前置条件 ⚙️
 
 欢迎阅读本篇文章！在深入探讨 `Three.js` 与 `Shader (GLSL)` 的进阶内容之前，请确保您已经具备以下基础知识：
 
@@ -25,7 +32,7 @@
 
 ---
 
-## 2.Hero Section 概览
+## 2.Hero Section 概览 🌌
 
 > “Hero Section” 是网页设计中的一个术语，通常指页面顶部的大型横幅区域。  
 > 对于开发者而言，它可以更直观地理解为：**用户在访问网站瞬间所感受到的视觉冲击，或促使他们停留在网站的关键视觉因素。**
@@ -35,7 +42,7 @@
 <img src="C:\Users\f1686533\Desktop\planets\planets.png" style="zoom:150%;" />
 
 这些网站往往拥有天马行空的页面布局，美丽的星球在画面中静静流动，营造出一种未来科技与宇宙幻想交织的氛围。  
-于是，我让 `GPT` 通过文生图生成了一张页面原型图。
+于是，我让 `GPT` 🧠 通过文生图生成了一张原型设计稿：
 
 ### Page 原型图
 
@@ -65,7 +72,7 @@
 
 ![](C:\Users\f1686533\Desktop\planets\x.png)
 
-## 3.场景搭建
+## 3.场景搭建 🧱
 
 由于本专栏主要聚焦于 `Three.js`，因此本文不会详细讲解从 0 到 1 的完整页面实现过程，而是重点介绍与 `Three.js` 相关的实现部分。
 
@@ -74,7 +81,7 @@
 - 散布在空间中的 **星点** 与 **中心星环**
 - 漂浮在太空中的 **三颗行星**
 
-### 3.1 星云图背景
+### 3.1 星云图背景 🌌
 
 这一部分的实现非常简单：只需将加载好的星云贴图设置为场景的 `background` 即可。
 
@@ -96,7 +103,7 @@
 
 ![04](C:\Users\f1686533\Desktop\planets\04.png)
 
-### 3.2 星星 与 星环
+### 3.2 星星 与 星环✨
 
 这一部分构成了整个 Hero Section 的核心视觉焦点。我们通过 `Points` 系统创建了一个由大量粒子组成的螺旋星系，其中包含星星和中心星环。
 
@@ -109,7 +116,7 @@
 ![02](C:\Users\f1686533\Desktop\planets\02.gif)
 
 当我们放开控制器、稍微调整视角时，就会发现这个结构实际上只是一个简单的圆柱体。  
-通过透视投影，我们营造出了“遍布星光的宇宙”错觉。
+通过透视营造出“浩瀚星海”的假象。
 
 于是，现在你大概已经能想到几种实现方式了：
 
@@ -117,7 +124,7 @@
 - 或者在构建 `BufferGeometry` 时，利用三角函数约束顶点分布，使所有粒子落在圆环轨迹上。
 - 下面我来分享我在项目中采用的具体思路。
 
-#### 实现思路
+#### 3.2.1 实现思路 🌠
 
 可以概括为以下几个步骤：
 
@@ -126,7 +133,7 @@
 3. **添加随机扰动**：为每个粒子添加随机偏移，营造自然的星系形态
 4. **着色器动画**：在顶点着色器中实现旋转动画，让星系"流动"起来
 
-#### 粒子位置生成
+#### 3.2.2粒子位置生成 💫
 
 在 `setGalaxy()` 方法中，我们为每个粒子生成位置数据：
 
@@ -149,7 +156,7 @@ const z = Math.sin(branchAngle + spinAngle) * radius
 - `spinAngle`：根据半径和旋转参数 `spin` 计算螺旋角度，离中心越远，旋转角度越大
 - `branchAngle`：将粒子均匀分配到多个分支上，形成星系的旋臂结构
 
-#### 圆环约束算法
+#### 3.2.3 圆环约束算法 🌌
 
 为了让粒子呈现出星环的效果，我们使用了**圆环约束算法**：
 
@@ -171,7 +178,7 @@ const effectiveRandomness = this.parameters.randomness * ringConstraint
 
 这样就能形成一条清晰的星环带，而不是均匀分布的粒子。
 
-#### 随机扰动
+#### 3.2.4随机扰动 🌀
 
 为了增加星系的自然感，我们为每个粒子的Y轴添加了随机偏移：
 
@@ -189,7 +196,7 @@ const randomY = effectiveRandomness * radius * (Math.random() < 0.5 ? 1 : -0.4) 
 
 或许你有更大胆的创意？在中心部分放上一些特殊的星空元素？比如[黑洞](https://www.shadertoy.com/results?query=black+hole)，或者一只巨大的“外星之眼” 👁️让整个场景更具神秘感。
 
-#### 粒子圆环带动粒子群
+#### 3.2.5 粒子圆环带动粒子群 🌀
 
 到目前为止，我们已经定义了粒子在空间中的分布关系，也确定了它们在星环结构中的约束逻辑。接下来要做的，就是让这些粒子 **动起来** —— 让星环旋转，从而带动整个星系流动。
 
@@ -232,9 +239,262 @@ distanceToCenter = clamp(distanceToCenter, 0.0, 10.0);
 
 ![](C:\Users\f1686533\Desktop\planets\04.gif)
 
-### 3.3. 星球
+### 3.3 星球 🌍
+
+这一部分是整个页面中最具表现力的视觉元素 —— 三颗漂浮在太空中的星球。
+
+![](C:\Users\f1686533\Desktop\planets\06.png)
+
+而对于如何在 `Threejs`里面显示一颗星球，我想已经有太多技术文章来描述这一过程了。这里我也推荐你去看 [Threejs jounery](https://www.bilibili.com/video/BV1aT421m7Rb/?spm_id_from=333.788.videopod.episodes&vd_source=596f69edc513ca7e9dbbe91dbe1d7dde&p=38)  中 `Earth Shader` 章节。(这里 B 站链接，但是有条件还是建议补补票，作者会在每个圣诞节给 `discount` )
+
+这里我主要描述当前页面的星球实现与其余教程的不同点。
+
+星球渲染包含几个关键部分：
+
+1. **星球主体**：使用各向异性过滤提升纹理质量。使用置换贴图增加地形细节，法线贴图增强表面凹凸感
+2. **光照系统**：自定义环境光 + 点光源，支持衰减、漫反射和镜面反射
+
+#### 3.3.1 星球主体 🪐 
+
+放大星球可以看到表面存在明显的地形起伏，这通常会让人想到 `MeshStandardMaterial` 的 `bumpMap` 或 `displacementMap`。
+但在本项目中，我并没有直接使用标准物理材质，而是采用了 `ShaderMaterial`，并在顶点着色器中根据 **法线贴图** 自行实现位移和光照控制。
+这么做的原因是为了后续自定义光照系统做铺垫。
+
+当然条条大路通罗马，你也可以通过
+
+✅ **方案一**：[MeshStandardMaterial](https://threejs.org/docs/#MeshStandardMaterial.bumpMap)+ 置换/法线贴图 + 点光源（快速简洁）
+
+✅ **方案二**：使用 [THREE-CustomShaderMaterial](https://github.com/FarazzShaikh/THREE-CustomShaderMaterial) 在标准光照的基础上扩展自定义 Shader
+
+这里仅提供我的实现方案
+
+<img src="C:\Users\f1686533\Desktop\planets\07.png" style="zoom:150%;" />
+
+首先我们先创建一个顶点足够多的球体，再简单的创建`ShaderMaterial`以及应用`baseColor`到球体上后有以下几点需要注意
+
+1. 因为后面置换贴图在顶点着色器中改变顶点位置，形成地形起伏，需要通过操控顶点位置来实现这种凹凸地形，所以我们需要分配足够多的顶点给后续`vertexShader`假如没有分配足够多的顶点则会导致地形呈现“方块感”：
+
+```js
+// 创建星球几何体（增加细分以支持置换）
+this.geometry = new THREE.IcosahedronGeometry(this.radius, 64, 64)
+```
+
+较少顶点情况：
+
+![08](C:\Users\f1686533\Desktop\planets\08.png)
+
+在顶点着色器中，我们使用置换贴图来改变顶点的位置，形成地形起伏：
+
+```glsl
+// 从置换贴图的红色通道读取高度值
+float displacement = texture2D(uDisplacementMap, uv).r;	// uniform 传入 网站上下载好的贴图即可
+
+// 沿法线方向偏移顶点位置
+vec3 displacedPosition = position + normal * displacement * uDisplacementScale;
+```
+
+`uDisplacementScale` 控制置换强度，数值越大，地形起伏越明显。
+
+现在你应该拥有了一个凹凸不平的星球
+
+![](C:\Users\f1686533\Desktop\planets\05.gif)
+
+#### 3.3.2 光照系统
+
+片元着色器负责计算最终的颜色，包含以下几个关键步骤：
+
+**1. 法线贴图处理**
+
+我们实现了完整的 TBN（切线-副切线-法线）矩阵计算，将法线贴图从切线空间转换到世界空间：
+
+```glsl
+vec3 perturbNormal(vec3 normal, vec3 position, vec2 uv, sampler2D normalMap, float normalScale) {
+  // 获取法线贴图值并转换到 -1 到 1 范围
+  vec3 normalMapColor = texture2D(normalMap, uv).rgb;
+  vec3 normalMapNormal = normalize(normalMapColor * 2.0 - 1.0);
+  
+  // 通过屏幕空间导数计算切线和副切线
+  vec3 q1 = dFdx(position);
+  vec3 q2 = dFdy(position);
+  vec2 st1 = dFdx(uv);
+  vec2 st2 = dFdy(uv);
+  
+  vec3 tangent = normalize(q1 * st2.t - q2 * st1.t);
+  vec3 bitangent = normalize(-q1 * st2.s + q2 * st1.s);
+  
+  // 构建 TBN 矩阵
+  mat3 tbn = mat3(tangent, bitangent, normal);
+  
+  // 混合原始法线和扰动后的法线
+  vec3 perturbedNormal = normalize(mix(normal, tbn * normalMapNormal, normalScale));
+  
+  return perturbedNormal;
+}
+```
+
+**2. 环境光计算**
+
+环境光提供基础照明，让阴影区域也有可见度：
+
+```glsl
+vec3 ambient = uAmbientLight * textureColor * uAmbientLightIntensity;
+```
+
+**3. 点光源计算**
+
+点光源使用兰伯特漫反射模型，并包含距离衰减：
+
+```glsl
+// 计算光源方向
+vec3 lightDirection = uPointLightPosition - vPosition;
+float distance = length(lightDirection);
+lightDirection = normalize(lightDirection);
+
+// 距离平方衰减（避免近距离过度曝光）
+float attenuation = 1.0 / (1.0 + 0.09 * distance + 0.032 * distance * distance);
+
+// 兰伯特漫反射
+float lightIntensity = max(dot(normal, lightDirection), 0.0);
+vec3 diffuse = uPointLightColor * textureColor * lightIntensity * uPointLightIntensity * attenuation;
+```
+
+**4. 镜面反射**
+
+我们还实现了简单的镜面高光，模拟金属表面的反射：
+
+```glsl
+// 菲涅尔效应
+vec3 viewDirection = normalize(cameraPosition - vPosition);
+float fresnel = pow(1.0 - max(dot(normal, viewDirection), 0.0), 2.0);
+
+// 金属度和粗糙度影响
+vec3 metallic = mix(textureColor, vec3(1.0), uMetalness);
+float roughnessFactor = 1.0 - uRoughness;
+
+// 镜面反射
+vec3 reflectDirection = reflect(-lightDirection, normal);
+float specular = pow(max(dot(viewDirection, reflectDirection), 0.0), 4.0 * roughnessFactor);
+vec3 specularColor = uPointLightColor * specular * metallic * fresnel * attenuation;
+```
+
+最终颜色由环境光、漫反射和镜面反射组合而成：
+
+```glsl
+vec3 finalColor = ambient + diffuse + specularColor * 0.3;
+```
+
+效果如下:
+
+![](C:\Users\f1686533\Desktop\planets\06.gif)
+
+这是一套很经典的着色模型(**Blinn-Phong Reflectance Model**），当然你也可以从我之前推荐的 [games101](https://www.bilibili.com/video/BV1X7411F744?spm_id_from=333.788.videopod.episodes&vd_source=596f69edc513ca7e9dbbe91dbe1d7dde&p=15) 的第 7 节 第39 分开始看到相关内容。
+
+#### 3.3.3 各向异性过滤
+
+放大后中央模糊？别急！这是采样角度导致的走样问题 📉
+
+![](C:\Users\f1686533\Desktop\planets\12.png)
+
+这看齐来是真的挺丑的，接下来我们需要设定一个特殊的`texture`属性值来解决它。——`Anisotropic Filtering `各向异性过滤
+
+听起来有点熟悉对不对？
+
+很多人在做比较大的场景时，会将地板贴图的各向异性过滤值调高，因为这样可以让"**让贴图在远处或倾斜的角度下依然保持清晰，不会变糊**"。
+
+![](C:\Users\f1686533\Desktop\planets\09.png)
+
+但为什么会出现这种走样的情况呢？
+
+原因在于**当三维表面与摄像机夹角较大时，屏幕上一个像素在纹理空间中的采样区域会被透视投影拉伸，形成一个长条或椭圆形的采样足迹。传统过滤算法假设采样区域为正方形，因此在这种情况下容易出现模糊或走样。**(这里同样也推荐您去看 [games101 图形学入门课程中对于走样和采样相关章节](https://www.bilibili.com/video/BV1X7411F744?spm_id_from=333.788.videopod.episodes&vd_source=596f69edc513ca7e9dbbe91dbe1d7dde&p=6))
+
+这里我做简单解释，可能不太准确，最好还是自己系统学习：
+
+首先我们要明确一点，当 GPU 渲染模型时，它会计算屏幕上每个像素的颜色。
+ 要得到颜色，就需要“采样”纹理（texture）：
+
+```bash
+屏幕像素 → 给定一个像素在三维表面上的位置 → 通过 UV 映射 → 找到对应贴图坐标 → 从贴图图像中取出颜色值。
+```
+
+当表面与摄像机有角度、或者表面离得太远时会出现一个屏幕像素对应到贴图上多个像素点（过采样）。
+
+若是最理想的情况下，就是贴图当前与摄像机为正交视图（假设现在一个格子就是一个实际像素点）
+
+![](C:\Users\f1686533\Desktop\planets\10.png)
+
+此时每个屏幕像素都对应贴图中 等面积的区域（正交视角,且物体远）此时无论是点采样，还是双线性过滤，三线性过滤。各个区域显示的内容应该都是"一致"的，采样逻辑一致，在正交情况下得到的采样结果就会一致，画面就会一致。
+
+当视角逐渐倾斜时，情况便发生了变化。可以看到，贴图在透视关系下被压缩成一个梯形，而屏幕上的某一个像素点此时对应到纹理空间中的“长条”区域。这意味着**在同样的屏幕分辨率下，纹理需要被更密集地采样才能保持清晰**。然而，传统的双线性或三线性过滤只会在纹理的相邻像素间进行平均，它并不能感知“方向性”的拉伸。
+
+![](C:\Users\f1686533\Desktop\planets\11.png)
+
+于是，当这种拉伸主要沿着某一个方向（例如 V 轴）发生时，原有过滤会出现“模糊一片或锯齿拖影”的情况。
+
+各向异性过滤（AF）正是为了解决这种在**倾斜角度观察纹理时的模糊问题**而提出的。
+**各向异性过滤（Anisotropic Filtering）会估算像素在纹理空间中的椭圆采样范围，并在主要拉伸方向上进行多次采样（通常 2 至 16 次），再将结果加权平均。这种方式能在倾斜角度下保持纹理细节清晰。**
+
+现在让我们将贴图信息应用上 AF
+
+```js
+    // 设置主纹理 & 各项异性过滤
+    const texture = this.resources.items[this.textureName] // 从 Solar System Scope 下载的贴图
+    texture.generateMipmaps = true	//默认为 true 是否为纹理生成 mipmap 用于后续三线性插值
+    texture.minFilter = THREE.LinearMipMapLinearFilter //三线性插值
+    texture.colorSpace = THREE.SRGBColorSpace	//色彩空间
+    texture.anisotropy = 8	//设定各向异性值 越大越耗性能！！
+```
+
+当然，如果你想知道当前最大可支持各向异性值是多少。
+
+可以通过`console.log('Max AF:', renderer.capabilities.getMaxAnisotropy()); `来获取最大值是多少。
+
+但目前来说 8对我们够用。
+
+现在在看星球最后的问题也解决了！
+
+![](C:\Users\f1686533\Desktop\planets\13.png)
+
+##  4.最终成果 🎉
+
+细节调整完毕后，网站终于大功告成！🚀
+
+![](C:\Users\f1686533\Desktop\planets\final.png)
+
+## 5.最后的一些话 🗣
+
+**人们常说，AI 时代将取代那些碌碌无为的人。**  
+**但我更愿意相信，AI 的到来，是在解放那些富有创造力的灵魂——**  
+**让他们得以更轻易地将脑海中的灵感化为现实 💫。**
+
+**至于 Web3D，这个概念似乎一直徘徊在热潮之外，**  
+**既未消逝，也未真正崛起。**  
+**然而，随着 AI 的出现技术门槛的逐渐降低，它或许终将迎来属于自己的时刻 🚀。**
+
+**我已经厌倦了那些平平无奇、千篇一律的网页。**  
+**我希望未来的网络世界能拥有——**  
+**更多的色彩 🎨，**  
+**更多的想象空间 🌌，**  
+**更多被 AI 点燃的创造之光 ✨。**
+
+**而我愿意，为那些仍然相信创作力的人，铺出一条属于未来的路。** 🌈  
+
+## 6.专栏
+
+### 本专栏的愿景
 
 
+ 本专栏的愿景是通过分享 `Three.js` 的中高级应用和实战技巧，帮助开发者更好地将 `3D` 技术应用到实际项目中，打造令人印象深刻的 `Hero Section`。我们希望通过本专栏的内容，能够激发开发者的创造力，推动 `Web3D` 技术的普及和应用。
 
+### 加入社区，共同成长
 
+如果您对 `Threejs` 这个 `3D` 图像框架很感兴趣，或者您也深信未来国内会涌现越来越多 `3D` 设计风格的网站，欢迎加入 **[ice 图形学社区](https://icegl.cn/)**。这里是国内 Web 图形学最全的知识库，致力于打造一个全新的图形学生态体系！您可以在认证达人里找到我这个 `Threejs` 爱好者和其他大佬。
 
+此外，如果您很喜欢 `Threejs `又在烦恼其原生开发的繁琐，那么我诚邀您尝试 **[Tresjs](https://tresjs.org/)** 和 **[TvTjs](https://docs.icegl.cn/)**, 他们都是基于 `Vue` 的 `Threejs` 框架。 **[TvTjs](https://docs.icegl.cn/)** 也为您提供了大量的可使用案例，并且拥有较为活跃的开发社区，在这里你能碰到志同道合的朋友一起做开源！
+
+## 7.往期回顾
+
+《[🎮 前端也能造城市？源码公开：那个被外网 2.7 万人围观的 Three.js 小游戏](https://juejin.cn/post/7538715423534399534)》
+
+《[😲我又写出了被 Three.js 官推转发的项目？！🥳🥳(源码分享)](https://juejin.cn/post/7509880859307835433)》
+
+《[😮😮😮 我写出了被 Threejs 官推转发的项目🚀✨？！](https://juejin.cn/post/7498914140166799397)》
